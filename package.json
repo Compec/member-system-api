@@ -1,0 +1,26 @@
+{
+  "name": "member-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "tar -cvf ./deploy.tar --exclude=./node_modules --exclude='*.map' ./*  &&caprover deploy -t ./deploy.tar",
+    "push": "tar -cvf ./deploy.tar --exclude=./node_modules --exclude='*.map' ./*  &&caprover deploy --default"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "firebase": "^6.6.1",
+    "firebase-admin": "^8.5.0",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}

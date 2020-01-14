@@ -1,0 +1,130 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Compec</title>
+	</head>
+
+	<body>
+		<section>
+			<table>
+				<thead>
+					<th>Okuma Zamanı ( Server Saati )</th>
+					<th>RFID NO</th>
+					<th>Kayıt Linki</th>
+					<th>Bilgi Linki ( TO DO )</th>
+				</thead>
+				<tbody id="uyeler">
+					<tr>
+						<td>asda</td>
+						<td>sad</td>
+					</tr>
+					<tr>
+						<td>asda</td>
+						<td>sad</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<script>
+			// TODO update ws server
+			let socket = new WebSocket(
+				"wss://connect.websocket.in/compecRD?room_id=1994"
+			)
+
+			socket.onopen = function(e) {
+				// alert("[open] Connection established")
+				// alert("Sending to server")
+				socket.send("BROWSER WORKING")
+			}
+
+			socket.onmessage = function(event) {
+				// alert(`[message] Data received from server: ${event.data}`)
+				console.log(JSON.parse(event.data))
+				addMember(JSON.parse(event.data), new Date())
+
+				// auto open new member registration page to fill information
+				// TODO fill registration form link
+				// window.open("https://docs.google.com/forms/d/e/*****/viewform?entry.1428567309="+JSON.parse(event.data).rfid, '_blank')
+			}
+
+			socket.onclose = function(event) {
+				if (event.wasClean) {
+					alert(
+						`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+					)
+				} else {
+					// e.g. server process killed or network down
+					// event.code is usually 1006 in this case
+					alert("[close] Connection died")
+				}
+			}
+
+			socket.onerror = function(error) {
+				alert(`[error] ${error.message}`)
+			}
+
+			const addMember = (info, date) => {
+				const name = document.createElement("td")
+				name.innerText = info.rfid
+				const button = document.createElement("button")
+				const zaman = document.createElement("td")
+				zaman.innerText = date
+
+				const link = document.createElement("td")
+
+				const att = document.createElement("a")
+				link.append(att)
+				button.innerText = "Formu Aç"
+				att.href =
+					// TODO look credentials.txt for next line
+					"https://docs.google.com/forms/d/e/*****/viewform?usp=pp_url&entry.1325691682=" +
+					JSON.parse(event.data).rfid
+				att.target = "_blank"
+				att.append(button)
+
+				const tablerow = document.createElement("tr")
+				tablerow.append(zaman, name, link)
+
+				// setTimeout(tablerow.style="background-color : pink",1)
+				document
+					.getElementById("uyeler")
+					.insertBefore(
+						tablerow,
+						document.getElementById("uyeler").childNodes[0]
+					)
+			}
+		</script>
+		<style>
+			table {
+				font-family: arial, sans-serif;
+				border-collapse: collapse;
+				width: 100%;
+			}
+			button {
+				width: 100%;
+				height: 7vh;
+			}
+			td,
+			th {
+				border: 1px solid #dddddd;
+				text-align: left;
+				padding: 8px;
+			}
+
+			tr:nth-child(even) {
+				background-color: #dddddd;
+			}
+
+			tbody tr:nth-child(1) td button {
+				/* background-color: rgb(235, 99, 178); */
+				height: 15vh;
+			}
+			tr:hover {
+				background-color: #55c9ec;
+			}
+		</style>
+	</body>
+</html>
